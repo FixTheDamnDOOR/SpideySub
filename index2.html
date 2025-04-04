@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ user.username }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <script src="jdate.js" type="text/javascript" charset="utf-8"></script>
+    <script src="jdate.min.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #131831, #000000);
+            color: #e0e0e0;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 30;
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .accordion-wrapper {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .accordion {
+            width: 100%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 4px 15px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .accordion-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 25px;
+            color: #ffffff;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .usage-card {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .usage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .usage-percent {
+            font-size: 20px;
+            font-weight: bold;
+            color: #6ab7ff;
+        }
+        
+        .usage-username {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .usage-status {
+            color: #4caf50;
+            font-size: 13px;
+        }
+        
+        .usage-bar {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+        
+        .usage-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #6ab7ff, #1e88e5);
+            width: 1.5%;
+        }
+        
+        .usage-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .usage-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .usage-value {
+            font-weight: 500;
+        }
+        
+        .usage-days {
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+        }
+        
+        .accordion-item {
+            margin-bottom: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .accordion-item:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .accordion-button {
+            width: 100%;
+            padding: 15px;
+            text-align: right;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        
+        .accordion-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .accordion-button::after {
+            content: '+';
+            font-size: 24px;
+            color: #6ab7ff;
+            transition: all 0.3s ease;
+        }
+        
+        .accordion-button.active::after {
+            content: '-';
+            color: #6ab7ff;
+        }
+        
+        .accordion-content {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.15);
+            text-align: right;
+        }
+        
+        .accordion-content p {
+            padding: 15px 15px;
+            margin: 0;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 400;
+            font-size: 20px;
+        }
+        
+        .button-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            opacity: 0.9;
+        }
+
+        /* Pushable Button Styles */
+        .pushable {
+            position: relative;
+            background: transparent;
+            padding: 0px;
+            border: none;
+            cursor: pointer;
+            outline-offset: 4px;
+            outline-color: deeppink;
+            transition: filter 250ms;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            width: 100%;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        .shadow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: hsl(0, 0%, 7%);
+            border-radius: 8px;
+            filter: blur(2px);
+            will-change: transform;
+            transform: translateY(2px);
+            transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+        }
+
+        .edge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            border-radius: 8px;
+            background: linear-gradient(
+                to right,
+                hsl(153, 44%, 28%) 0%,
+                hsl(151, 53%, 22%) 8%,
+                hsl(166, 54%, 20%) 92%,
+                hsl(105, 52%, 29%) 100%
+            );
+        }
+
+        .front {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            border-radius: 8px;
+            background: hsl(141, 43%, 35%);
+            padding: 16px 32px;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 1rem;
+            transform: translateY(-4px);
+            transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+        }
+
+        .pushable:hover {
+            filter: brightness(110%);
+        }
+
+        .pushable:hover .front {
+            transform: translateY(-6px);
+            transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+        }
+
+        .pushable:active .front {
+            transform: translateY(-2px);
+            transition: transform 34ms;
+        }
+
+        .pushable:hover .shadow {
+            transform: translateY(4px);
+            transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+        }
+
+        .pushable:active .shadow {
+            transform: translateY(1px);
+            transition: transform 34ms;
+        }
+
+        .pushable:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        .btn-icon {
+            width: 25px;
+            height: 25px;
+            fill: white;
+        }
+
+        .accordion::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, 
+                          rgba(106, 183, 255, 0.1) 0%, 
+                          transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(20px, 20px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .accordion {
+                padding: 15px;
+            }
+            
+            .accordion-title {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+            
+            .usage-percent {
+                font-size: 18px;
+            }
+            
+            .usage-username {
+                font-size: 15px;
+            }
+            
+            .accordion-button {
+                font-size: 14px;
+                padding: 12px;
+            }
+            
+            .icon {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .front {
+                padding: 14px 24px;
+                font-size: 0.9rem;
+            }
+            
+            .btn-icon {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .accordion-title {
+                font-size: 20px;
+            }
+            
+            .usage-details {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .usage-value {
+                text-align: left;
+            }
+            
+            .front {
+                padding: 12px 20px;
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+                gap: 6px;
+            }
+            
+            .btn-icon {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="accordion-wrapper">
+        <!-- User Info Section -->
+        <div class="accordion">
+            <div class="usage-header">
+                <div>
+                    <div class="usage-username">{{ user.username }}</div>
+                    <div class="usage-status">فعال</div>
+                </div>
+            </div>
+            
+            <div class="usage-details">
+                <span class="usage-label">حجم باقی مانده</span>
+                <span class="usage-value" dir="ltr">
+                    {% if not user.data_limit %}
+                        نامحدود
+                    {% else %}
+                        {{ ((user.data_limit - user.used_traffic) / 1073741824)|round(1) }} GB
+                    {% endif %}
+                </span>
+            </div>
+            
+            <div class="usage-details">
+                <span class="usage-label">تاريخ پایان اشتراک</span>
+                <span class="usage-value" dir="ltr">
+                    {% if not user.expire %}
+                        نامحدود
+                    {% else %}
+                        {{ user.expire | datetime }}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- Connection Instructions -->
+        <div class="accordion">
+            <h2 class="accordion-title">آموزش اتصال</h2>
+            
+            <!-- iOS -->
+            <div class="accordion-item">
+                <button class="accordion-button">
+                    <span class="button-content">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 0.9);"><path d="M19.665 16.811a10.316 10.316 0 0 1-1.021 1.837c-.537.767-.978 1.297-1.316 1.592-.525.482-1.089.73-1.692.744-.432 0-.954-.123-1.562-.373-.61-.249-1.17-.371-1.683-.371-.537 0-1.113.122-1.73.371-.616.25-1.114.381-1.495.393-.577.025-1.154-.229-1.729-.764-.367-.32-.826-.87-1.377-1.648-.59-.829-1.075-1.794-1.455-2.891-.407-1.187-.611-2.335-.611-3.447 0-1.273.275-2.372.826-3.292a4.857 4.857 0 0 1 1.73-1.751 4.65 4.65 0 0 1 2.34-.662c.46 0 1.063.142 1.81.422s1.227.422 1.436.422c.158 0 .689-.167 1.593-.498.853-.307 1.573-.434 2.163-.384 1.6.129 2.801.759 3.6 1.895-1.43.867-2.137 2.08-2.123 3.637.012 1.213.453 2.222 1.317 3.023a4.33 4.33 0 0 0 1.315.863c-.106.307-.218.6-.336.882zM15.998 2.38c0 .95-.348 1.838-1.039 2.659-.836.976-1.846 1.541-2.941 1.452a2.955 2.955 0 0 1-.021-.36c0-.913.396-1.889 1.103-2.688.352-.404.8-.741 1.343-1.009.542-.264 1.054-.41 1.536-.435.013.128.019.255.019.381z"></path></svg>
+                        <span>آیفون</span>
+                    </span>
+                </button>
+                <div class="accordion-content">
+                    <p>ابتدا برنامهٔ زیر را نصب نمایید</p>
+                    <a href="https://apps.apple.com/us/app/streisand/id6450534064"><button class="pushable">
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front">
+                            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);"><path d="m12 16 4-5h-3V4h-2v7H8z"></path><path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7z"></path></svg>
+                            دانلود برنامه (اپ‌استور)
+                        </span>
+                    </button></a>
+                    <p>سپس روی لینک زیر بزنید</p>
+                    <a href="streisand://import/"user.subscription_url>
+                        <button class="pushable">
+                            <span class="shadow"></span>
+                            <span class="edge"></span>
+                            <span class="front">
+                                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);"><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4z"></path><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path></svg>
+                                افزودن به برنامه
+                            </span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Android -->
+            <div class="accordion-item">
+                <button class="accordion-button">
+                    <span class="button-content">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 0.9);"><path d="M18.344 8.71c-.707 0-1.279.572-1.279 1.278v4.53a1.278 1.278 0 1 0 2.558 0v-4.53c0-.706-.572-1.278-1.279-1.278zm-12.688 0c-.707 0-1.279.572-1.279 1.278v4.53a1.278 1.278 0 1 0 2.558 0v-4.53A1.277 1.277 0 0 0 5.656 8.71zm8.889-3.809.768-1.388a.343.343 0 0 0-.133-.47.344.344 0 0 0-.471.135l-.789 1.42c-.588-.235-1.236-.368-1.92-.368s-1.332.132-1.92.367l-.789-1.418a.344.344 0 0 0-.471-.135.345.345 0 0 0-.133.47l.768 1.388C8.072 5.69 7.148 7.099 7.148 8.71c0 .011 0 .021.002.034-.002.006-.002.013-.002.019v.001h9.703V8.71c.001-1.611-.923-3.019-2.306-3.809zM9.76 6.869a.346.346 0 1 1 .005-.693.346.346 0 0 1-.005.693zm4.48 0a.347.347 0 0 1 0-.692.346.346 0 0 1 0 .692zM7.148 16.12c0 .646.525 1.171 1.174 1.171h.586v2.401a1.279 1.279 0 0 0 2.558 0v-2.401h1.066v2.401c0 .707.572 1.278 1.277 1.278.709 0 1.281-.571 1.281-1.278v-2.401h.586c.648 0 1.174-.524 1.174-1.171V9.028H7.148v7.092z"></path></svg>
+                        <span>اندروید</span>
+                    </span>
+                </button>
+                <div class="accordion-content">
+                    <p>ابتدا برنامهٔ زیر را نصب نمایید</p>
+                    <a href="https://github.com/2dust/v2rayNG/releases/download/1.9.45/v2rayNG_1.9.45_universal.apk"><button class="pushable">
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front">
+                            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);"><path d="m12 16 4-5h-3V4h-2v7H8z"></path><path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7z"></path></svg>
+                            دانلود برنامه (لینک مستقیم)
+                        </span>
+                    </button></a>
+                    <a href="https://play.google.com/store/apps/details?id=com.v2ray.ang"><button class="pushable">
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front">
+                            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);"><path d="m12 16 4-5h-3V4h-2v7H8z"></path><path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7z"></path></svg>
+                            دانلود برنامه (گوگل‌استور)
+                        </span>
+                    </button></a>
+                    <p>سپس روی لینک زیر بزنید</p>
+                    <button class="pushable">
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front">
+                            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);"><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4z"></path><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path></svg>
+                            افزودن به برنامه
+                        </span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Windows -->
+            <div class="accordion-item">
+                <button class="accordion-button">
+                    <span class="button-content">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 0.9);"><path d="m3 5.557 7.357-1.002.004 7.097-7.354.042L3 5.557zm7.354 6.913.006 7.103-7.354-1.011v-6.14l7.348.048zm.892-8.046L21.001 3v8.562l-9.755.077V4.424zm9.758 8.113-.003 8.523-9.755-1.378-.014-7.161 9.772.016z"></path></svg>
+                        <span>ویندوز</span>
+                    </span>
+                </button>
+                <div class="accordion-content">
+                    <p>ابتدا برنامهٔ زیر را نصب نمایید</p>
+                    <button class="pushable">
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front">
+                            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);"><path d="m12 16 4-5h-3V4h-2v7H8z"></path><path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7z"></path></svg>
+                            دانلود برنامه
+                        </span>
+                    </button>
+                    <p>سپس روی لینک زیر بزنید</p>
+                    <button class="pushable">
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front">
+                            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);"><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4z"></path><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path></svg>
+                            افزودن به برنامه
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.accordion-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const accordionContent = button.nextElementSibling;
+                const isActive = button.classList.contains('active');
+                
+                // Close all accordion items
+                document.querySelectorAll('.accordion-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.nextElementSibling.style.maxHeight = null;
+                });
+                
+                // Open clicked item if not active
+                if (!isActive) {
+                    button.classList.add('active');
+                    accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
