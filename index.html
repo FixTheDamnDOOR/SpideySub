@@ -459,27 +459,71 @@
                 <div class="usage-status" style="margin-top: 8px;">{{ user.status.value }}</div>
             </div>
             
-            <div class="usage-details">
-                <span class="usage-label">حجم باقی مانده</span>
-                <span class="usage-value" dir="ltr">
-                    {% if not user.data_limit %}
-                        نامحدود
-                    {% else %}
-                        {{ ((user.data_limit - user.used_traffic) / 1073741824)|round(1) }} GB
-                    {% endif %}
-                </span>
+            <div class="usage-details-container" style="display: flex; justify-content: space-between; margin: 20px 0; text-align: center;">
+                <div class="usage-item" style="flex: 1; padding: 0 10px;">
+                    <div class="usage-label" style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">حجم کل</div>
+                    <div class="usage-value" style="font-size: 24px; font-weight: bold; color: #6ab7ff;" dir="ltr">
+                        {% if not user.data_limit %}
+                            نامحدود
+                        {% else %}
+                            {{ (user.data_limit / 1073741824)|round(1) }} GB
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="usage-item" style="flex: 1; padding: 0 10px; border-left: 1px solid rgba(255, 255, 255, 0.1); border-right: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div class="usage-label" style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">حجم باقی مانده</div>
+                    <div class="usage-value" style="font-size: 24px; font-weight: bold; color: #6ab7ff;" dir="ltr">
+                        {% if not user.data_limit %}
+                            نامحدود
+                        {% else %}
+                            {{ ((user.data_limit - user.used_traffic) / 1073741824)|round(1) }} GB
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="usage-item" style="flex: 1; padding: 0 10px;">
+                    <div class="usage-label" dir="ltr" style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">مدت زمان باقی‌مانده</div>
+                    <div class="usage-value" style="font-size: 24px; font-weight: bold; color: #6ab7ff;" dir="rtl" id="remaining-days">
+                        {% if not user.expire %}
+                            نامحدود
+                        {% else %}
+                            {{ user.expire | datetime }}  <!-- This will be replaced by JavaScript -->
+                        {% endif %}
+                    </div>
+                </div>
             </div>
             
-            <div class="usage-details">
-                <span class="usage-label">تاريخ پایان اشتراک</span>
-                <span class="usage-value" dir="ltr">
-                    {% if not user.expire %}
-                        نامحدود
-                    {% else %}
-                        {{ user.expire | datetime }}
-                    {% endif %}
-                </span>
-            </div>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const remainingDaysElement = document.getElementById('remaining-days');
+                
+                // Only convert if there's an expiration date (not "نامحدود")
+                if (remainingDaysElement && remainingDaysElement.textContent.trim() !== 'نامحدود') {
+                    try {
+                        const expireDate = new Date(remainingDaysElement.textContent.trim());
+                        const today = new Date();
+                        
+                        // Calculate difference in milliseconds
+                        const diffTime = expireDate - today;
+                        
+                        // Convert to days
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays > 0) {
+                            remainingDaysElement.textContent = `${diffDays} روز`;
+                        } else if (diffDays === 0) {
+                            remainingDaysElement.textContent = "امروز آخرین روز است";
+                        } else {
+                            remainingDaysElement.textContent = "اشتراک منقضی شده";
+                        }
+                    } catch (e) {
+                        console.error('Error calculating remaining days:', e);
+                        // Keep the original date if calculation fails
+                    }
+                }
+            });
+            </script>
         </div>
 
         <!-- Connection Instructions -->
@@ -729,6 +773,32 @@
     <script>
         // Display current URL
         document.getElementById('current-url').textContent = window.location.href;
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Import the jalali-date package (make sure it's properly bundled in your build system)
+            const JalaliDate = require('jalali-date');
+            
+            // Get the expiration date element
+            const expireDateElement = document.getElementById('expire-date');
+            
+            // Only convert if there's an expiration date (not "نامحدود")
+            if (expireDateElement && expireDateElement.textContent.trim() !== 'نامحدود') {
+                try {
+                    const gregorianDate = new Date(expireDateElement.textContent.trim());
+                    const jalaliDate = new JalaliDate(gregorianDate);
+                    
+                    // Format: YYYY/MM/DD
+                    const formattedDate = `${jalaliDate.getFullYear()}/${String(jalaliDate.getMonth() + 1).padStart(2, '0')}/${String(jalaliDate.getDate()).padStart(2, '0')}`;
+                    
+                    expireDateElement.textContent = formattedDate;
+                } catch (e) {
+                    console.error('Error converting date to Jalali:', e);
+                    // Keep the original date if conversion fails
+                }
+            }
+        });
     </script>
 
 </body>
