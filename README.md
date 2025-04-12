@@ -12,7 +12,7 @@
 # Installation
 1. Download the template file:
 ```
-sudo wget -N -P /var/lib/marzban/templates/subscription/ https://raw.githubusercontent.com/FixTheDamnDOOR/SpideySub/blob/main/index.html
+sudo wget -N -P /var/lib/marzban/templates/subscription/ https://raw.githubusercontent.com/FixTheDamnDOOR/SpideySub/main/index.html
 ```
 2. Run this code:
 ```
