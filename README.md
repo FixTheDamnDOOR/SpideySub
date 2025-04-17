@@ -1,6 +1,8 @@
 # Subscription Template for [Marzban Panel](https://github.com/Gozargah/Marzban)
 
-<img width="666" alt="Screenshot 2025-04-17 at 15 46 46" src="https://github.com/user-attachments/assets/392bc478-f7d3-4a11-bd8e-0360f97f2760" />
+<div align="center">
+  <img width="666" alt="Screenshot" src="https://github.com/user-attachments/assets/392bc478-f7d3-4a11-bd8e-0360f97f2760" />
+</div>
 
 # Features
   * User info like data limit or time limit
