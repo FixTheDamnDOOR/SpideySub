@@ -17,7 +17,11 @@
         }
 
         body {
-            background: radial-gradient(circle at center, #131831, #000000);
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(91, 173, 254, 0.2) 0%, rgba(91, 173, 254, 0) 20%),
+                radial-gradient(circle at 90% 30%, rgba(129, 52, 175, 0.2) 0%, rgba(129, 52, 175, 0) 25%),
+                radial-gradient(circle at 50% 80%, rgba(221, 94, 137, 0.2) 0%, rgba(247, 198, 215, 0) 30%),
+                linear-gradient(135deg, #131831 0%, #000000 100%);
             color: #e0e0e0;
             font-family: 'Vazirmatn', serif;
             font-size: 30;
@@ -26,6 +30,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.4;
+                transform: translateX(-50%) scale(0.95);
+            }
+            100% {
+                opacity: 0.7;
+                transform: translateX(-50%) scale(1.05);
+            }
         }
         
         .accordion-wrapper {
@@ -52,12 +70,12 @@
         
         .accordion-title {
             text-align: center;
-            font-size: 36px;
+            font-size: 48px;
             margin-bottom: 25px;
             color: #ffffff;
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-            font-weight: 500;
+            font-weight: 700;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
@@ -116,10 +134,12 @@
         
         .usage-label {
             color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
         }
         
         .usage-value {
             font-weight: 500;
+            font-size: 24px;
         }
         
         .usage-days {
@@ -386,7 +406,7 @@
             }
             
             .accordion-title {
-                font-size: 22px;
+                font-size: 32px;
                 margin-bottom: 20px;
             }
             
@@ -421,7 +441,7 @@
 
         @media (max-width: 480px) {
             .accordion-title {
-                font-size: 20px;
+                font-size: 24px;
             }
             
             .usage-details {
@@ -430,7 +450,11 @@
             }
             
             .usage-value {
-                text-align: left;
+                text-align: center;
+            }
+
+            .usage-label {
+                font-size: 10px;
             }
             
             .front {
@@ -461,8 +485,8 @@
             
             <div class="usage-details-container" style="display: flex; justify-content: space-between; margin: 20px 0; text-align: center;">
                 <div class="usage-item" style="flex: 1; padding: 0 10px;">
-                    <div class="usage-label" style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">حجم کل</div>
-                    <div class="usage-value" style="font-size: 24px; font-weight: bold; color: #6ab7ff;" dir="ltr">
+                    <div class="usage-label" style="color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">حجم کل</div>
+                    <div class="usage-value" style="font-weight: bold; color: #6ab7ff;" dir="ltr">
                         {% if not user.data_limit %}
                             نامحدود
                         {% else %}
@@ -472,8 +496,8 @@
                 </div>
                 
                 <div class="usage-item" style="flex: 1; padding: 0 10px; border-left: 1px solid rgba(255, 255, 255, 0.1); border-right: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div class="usage-label" style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">حجم باقی مانده</div>
-                    <div class="usage-value" style="font-size: 24px; font-weight: bold; color: #6ab7ff;" dir="ltr">
+                    <div class="usage-label" style="color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">حجم باقی مانده</div>
+                    <div class="usage-value" style="font-weight: bold; color: #6ab7ff;" dir="ltr">
                         {% if not user.data_limit %}
                             نامحدود
                         {% else %}
@@ -483,8 +507,8 @@
                 </div>
                 
                 <div class="usage-item" style="flex: 1; padding: 0 10px;">
-                    <div class="usage-label" dir="ltr" style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">مدت زمان باقی‌مانده</div>
-                    <div class="usage-value" style="font-size: 24px; font-weight: bold; color: #6ab7ff;" dir="rtl" id="remaining-days">
+                    <div class="usage-label" dir="ltr" style="color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">مدت زمان باقی‌مانده</div>
+                    <div class="usage-value" style="font-weight: bold; color: #6ab7ff;" dir="rtl" id="remaining-days">
                         {% if not user.expire %}
                             نامحدود
                         {% else %}
@@ -528,7 +552,7 @@
 
         <!-- Connection Instructions -->
         <div class="accordion">
-            <h2 class="accordion-title">‌آموزش اتصال</h2>
+            <h2 class="accordion-title">آموزش اتصال سریع</h2>
             
             <!-- iOS -->
             <div class="accordion-item-ios">
@@ -709,7 +733,8 @@
 
         <!-- Seperated Links -->
         <div class="accordion">
-            <h2 class="accordion-title">لینک‌های VLESS به صورت جداگانه</h2>
+            <h2 class="accordion-title">لینک کانفیگ‌ها (روش قدیمی)</h2>
+            <p>با کلیک بر روی دکمه زیر می‌توانید لینک‌های v2ray را به صورت جداگانه دریافت کنید اما توجه داشته باشید که در این صورت قادر به بروزرسانی اشتراک نخواهید بود و هر بار برای دریافت اشتراک جدید باید دوباره این لینک‌ها را کپی کرده و وارد برنامه خود کنید.</p>
             
             <button class="pushable" onclick="copyAllLinks()">
                 <span class="shadow"></span>
@@ -800,6 +825,5 @@
             }
         });
     </script>
-
 </body>
 </html>
