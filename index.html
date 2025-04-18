@@ -519,35 +519,45 @@
             </div>
             
             <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const remainingDaysElement = document.getElementById('remaining-days');
-                
-                // Only convert if there's an expiration date (not "نامحدود")
-                if (remainingDaysElement && remainingDaysElement.textContent.trim() !== 'نامحدود') {
-                    try {
-                        const expireDate = new Date(remainingDaysElement.textContent.trim());
-                        const today = new Date();
-                        
-                        // Calculate difference in milliseconds
-                        const diffTime = expireDate - today;
-                        
-                        // Convert to days
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                        
-                        if (diffDays > 0) {
-                            remainingDaysElement.textContent = `${diffDays} روز`;
-                        } else if (diffDays === 0) {
-                            remainingDaysElement.textContent = "امروز آخرین روز است";
-                        } else {
-                            remainingDaysElement.textContent = "اشتراک منقضی شده";
+                document.addEventListener('DOMContentLoaded', function() {
+                    const remainingDaysElement = document.getElementById('remaining-days');
+                    
+                    // Only convert if there's an expiration date (not "نامحدود")
+                    if (remainingDaysElement && remainingDaysElement.textContent.trim() !== 'نامحدود') {
+                        try {
+                            const expireDate = new Date(remainingDaysElement.textContent.trim());
+                            const today = new Date();
+                            
+                            // Calculate difference in milliseconds
+                            const diffTime = expireDate - today;
+                            
+                            // Convert time units
+                            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                            const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+                            
+                            if (diffDays > 1) {
+                                remainingDaysElement.textContent = `${diffDays} روز`;
+                            } else if (diffDays === 1) {
+                                remainingDaysElement.textContent = "۱ روز";
+                            } else if (diffHours > 0) {
+                                remainingDaysElement.textContent = `${diffHours} ساعت و ${diffMinutes} دقیقه`;
+                            } else if (diffMinutes > 0) {
+                                remainingDaysElement.textContent = `${diffMinutes} دقیقه`;
+                            } else if (diffTime > 0) {
+                                remainingDaysElement.textContent = "کمتر از یک دقیقه";
+                            } else if (diffTime === 0) {
+                                remainingDaysElement.textContent = "همین حالا منقضی شد";
+                            } else {
+                                remainingDaysElement.textContent = "اشتراک منقضی شده";
+                            }
+                        } catch (e) {
+                            console.error('Error calculating remaining time:', e);
+                            // Keep the original date if calculation fails
                         }
-                    } catch (e) {
-                        console.error('Error calculating remaining days:', e);
-                        // Keep the original date if calculation fails
                     }
-                }
-            });
-            </script>
+                });
+        </script>
         </div>
 
         <!-- Connection Instructions -->
