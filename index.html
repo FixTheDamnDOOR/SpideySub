@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400..700&family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -703,21 +704,36 @@
         <!-- Seperated Links -->
         <div class="accordion">
             <h2 class="accordion-title">لینک کانفیگ‌ها (روش قدیمی)</h2>
-            <p>با کلیک بر روی دکمه زیر می‌توانید لینک‌های v2ray را به صورت جداگانه دریافت کنید اما توجه داشته باشید که در این صورت قادر به بروزرسانی اشتراک نخواهید بود و هر بار برای دریافت اشتراک جدید باید دوباره این لینک‌ها را کپی کرده و وارد برنامه خود کنید.</p>
+            <p style="margin-bottom: 8px;">با کلیک بر روی دکمه زیر می‌توانید لینک‌های v2ray را به صورت جداگانه دریافت کنید اما توجه داشته باشید که در این صورت قادر به بروزرسانی اشتراک نخواهید بود و هر بار برای دریافت اشتراک جدید باید دوباره این لینک‌ها را کپی کرده و وارد برنامه خود کنید.</p>
             
-            <button class="pushable" onclick="copyAllLinks()">
-                <span class="shadow"></span>
-                <span class="edge"></span>
-                <span class="front">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z"></path></svg>
-                    کپی تمام لینک‌ها
-                </span>
-            </button>
+            <div class="accordion-item-ios">
+                <button class="accordion-button">
+                    <span class="button-content">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="M8.465 11.293c1.133-1.133 3.109-1.133 4.242 0l.707.707 1.414-1.414-.707-.707c-.943-.944-2.199-1.465-3.535-1.465s-2.592.521-3.535 1.465L4.929 12a5.008 5.008 0 0 0 0 7.071 4.983 4.983 0 0 0 3.535 1.462A4.982 4.982 0 0 0 12 19.071l.707-.707-1.414-1.414-.707.707a3.007 3.007 0 0 1-4.243 0 3.005 3.005 0 0 1 0-4.243l2.122-2.121z"></path><path d="m12 4.929-.707.707 1.414 1.414.707-.707a3.007 3.007 0 0 1 4.243 0 3.005 3.005 0 0 1 0 4.243l-2.122 2.121c-1.133 1.133-3.109 1.133-4.242 0L10.586 12l-1.414 1.414.707.707c.943.944 2.199 1.465 3.535 1.465s2.592-.521 3.535-1.465L19.071 12a5.008 5.008 0 0 0 0-7.071 5.006 5.006 0 0 0-7.071 0z"></path></svg>
+                        <span>کپی لینک‌ها</span>
+                    </span>
+                </button>
+                <div class="accordion-content">
+                    <button class="pushable" onclick="copyAllLinks()" style="width: 100%;">
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z"></path></svg>
+                            کپی تمام لینک‌ها
+                        </span>
+                    </button>
+                    <div class="links-container" id="linksContainer">
+                        <!-- Links will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     <script>
         function copyAllLinks() {
-            const links = `{{ user.links }}`;
+            const sublinks = `{{ user.links }}`;
+            const links = sublinks.replace(/[\[\]']/g, '');
             navigator.clipboard.writeText(links).then(() => {
                 // Show a temporary notification
                 const notification = document.createElement('div');
@@ -830,5 +846,102 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const linksContainer = document.getElementById('linksContainer');
+            const subLinks = "{{ user.links }}";
+            
+            // Clean and split the links
+            const cleanedString = subLinks.replace(/[\[\]']/g, '');
+            const configArray = cleanedString.split(', ');
+            
+            // Create a button for each link
+            configArray.forEach((link, index) => {
+                if (!link.trim()) return;
+                
+                const linkWrapper = document.createElement('div');
+                linkWrapper.className = 'link-item';
+                linkWrapper.style.marginBottom = '10px';
+                
+                const button = document.createElement('button');
+                button.className = 'pushable';
+                button.style.width = '100%';
+                button.style.textAlign = 'right';
+                button.style.padding = '0';
+                
+                button.innerHTML = `
+                    <span class="shadow"></span>
+                    <span class="edge"></span>
+                    <span class="front" id="copyText${index}">
+                        <div class="button-content">
+                            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
+                                <path d="M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z"></path>
+                            </svg>
+                            <span dir='ltr'>${extractNameFromConfigURL(link)}</span>
+                        </div>
+                    </span>
+                `;
+                
+                button.addEventListener('click', function() {
+                    console.log('Copying:', link);
+                    copyToClipboard(link);
+                    
+                    const copyText = document.getElementById(`copyText${index}`);
+                    const defaultContent = copyText.innerHTML;
+                    
+                    copyText.innerHTML = `
+                        <div class="button-content" style="color: #4CAF50;">
+                            <lord-icon src="https://cdn.lordicon.com/jvihlqtw.json" 
+                                       trigger="loop" delay="1000" 
+                                       colors="primary:#4CAF50,secondary:#4CAF50"
+                                       style="width:24px;height:24px">
+                            </lord-icon>
+                            <span>کپی شد!</span>
+                        </div>
+                    `;
+                    
+                    setTimeout(function() {
+                        copyText.innerHTML = defaultContent;
+                    }, 2000);
+                });
+                
+                linkWrapper.appendChild(button);
+                linksContainer.appendChild(linkWrapper);
+            });
+
+            function extractNameFromConfigURL(url) {
+                const namePattern = /#([^#]*)/;
+                const match = url.match(namePattern);
+    
+                if (match) {
+                    const name = decodeURIComponent(match[1]);
+                    return name;
+                } else if (url.startsWith("vmess://")) {
+                    const encodedString = url.replace("vmess://", "");
+                    const decodedString = atob(encodedString);
+                    return JSON.parse(decodedString).ps
+                }
+                else {
+                    return null; // Return null if the pattern doesn't match
+                }
+            }
+            
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    console.log('Copied to clipboard');
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    // Fallback for older browsers
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                });
+            }
+        });
+        </script>
 </body>
 </html>
