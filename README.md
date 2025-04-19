@@ -1,7 +1,7 @@
 # Subscription Template for [Marzban Panel](https://github.com/Gozargah/Marzban)
 
 <div align="center">
-  <img width="666" alt="Screenshot" src="https://github.com/user-attachments/assets/392bc478-f7d3-4a11-bd8e-0360f97f2760" />
+<img width="688" alt="Screenshot 2025-04-19 at 21 44 07" src="https://github.com/user-attachments/assets/03b3a640-e3b7-4419-a4ac-3b4a0e06f30b" />
 </div>
 
 # Features
