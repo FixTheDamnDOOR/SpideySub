@@ -9,6 +9,7 @@
   * Quick addition of subscription links to apps
   * Links for downloading required applications
   * Access to copy all configs by one click
+  * Access to copy each config separately
   * ...
 
 # Installation
