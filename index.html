@@ -512,52 +512,11 @@
                         {% if not user.expire %}
                             نامحدود
                         {% else %}
-                            {{ user.expire | datetime }}  <!-- This will be replaced by JavaScript -->
+                            {{ user.expire }}  <!-- This will be replaced by JavaScript -->
                         {% endif %}
                     </div>
                 </div>
             </div>
-            
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const remainingDaysElement = document.getElementById('remaining-days');
-                    
-                    // Only convert if there's an expiration date (not "نامحدود")
-                    if (remainingDaysElement && remainingDaysElement.textContent.trim() !== 'نامحدود') {
-                        try {
-                            const expireDate = new Date(remainingDaysElement.textContent.trim());
-                            const today = new Date();
-                            
-                            // Calculate difference in milliseconds
-                            const diffTime = expireDate - today;
-                            
-                            // Convert time units
-                            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                            const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                            const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
-                            
-                            if (diffDays > 1) {
-                                remainingDaysElement.textContent = `${diffDays} روز`;
-                            } else if (diffDays === 1) {
-                                remainingDaysElement.textContent = "۱ روز";
-                            } else if (diffHours > 0) {
-                                remainingDaysElement.textContent = `${diffHours} ساعت و ${diffMinutes} دقیقه`;
-                            } else if (diffMinutes > 0) {
-                                remainingDaysElement.textContent = `${diffMinutes} دقیقه`;
-                            } else if (diffTime > 0) {
-                                remainingDaysElement.textContent = "کمتر از یک دقیقه";
-                            } else if (diffTime === 0) {
-                                remainingDaysElement.textContent = "همین حالا منقضی شد";
-                            } else {
-                                remainingDaysElement.textContent = "اشتراک منقضی شده";
-                            }
-                        } catch (e) {
-                            console.error('Error calculating remaining time:', e);
-                            // Keep the original date if calculation fails
-                        }
-                    }
-                });
-        </script>
         </div>
 
         <!-- Connection Instructions -->
@@ -784,6 +743,42 @@
         }
     </script>
     
+    <script>
+        // Add this script in your existing JavaScript section
+document.addEventListener('DOMContentLoaded', function() {
+    const remainingDaysElement = document.getElementById('remaining-days');
+    const expireText = remainingDaysElement.textContent.trim();
+
+    // Only process if it's not "نامحدود"
+    if (expireText !== 'نامحدود') {
+        const expireTimestamp = parseInt(expireText);
+        const currentTimestamp = Date.now() / 1000;
+        const difference = expireTimestamp - currentTimestamp;
+
+        if (difference <= 0) {
+            remainingDaysElement.textContent = `منقضی شده`;
+            return;
+        }
+
+        // Calculate time differences
+        const diffDays = Math.floor(difference / (60 * 60 * 24));
+        const diffHours = Math.floor(difference / (60 * 60));
+        const diffMinutes = Math.floor(difference / (60));
+
+        // Determine appropriate display format
+        if (diffDays > 0) {
+            remainingDaysElement.textContent = `${diffDays} روز`;
+        } else if (diffHours > 0) {
+            remainingDaysElement.textContent = `${diffHours} ساعت`;
+        } else if (diffMinutes > 0) {
+            remainingDaysElement.textContent = `${diffMinutes} دقیقه`;
+        } else {
+            remainingDaysElement.textContent = `کمتر از یک دقیقه`;
+        }
+    }
+});
+    </script>
+
     <script>
         document.querySelectorAll('.accordion-button').forEach(button => {
             button.addEventListener('click', () => {
