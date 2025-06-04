@@ -533,8 +533,8 @@
                     </span>
                 </button>
                 <div class="accordion-content">
-                    <p>ابتدا برنامه Streisand را با کلیک بر روی دکمه زیر از اپ‌استور دانلود نمایید.</p>
-                    <a href="https://apps.apple.com/us/app/streisand/id6450534064"><button class="pushable">
+                    <p>ابتدا برنامه V2box را با کلیک بر روی دکمه زیر از اپ‌استور دانلود نمایید.</p>
+                    <a href="https://apps.apple.com/us/app/v2box-v2ray-client/id6446814690"><button class="pushable">
                         <span class="shadow"></span>
                         <span class="edge"></span>
                         <span class="front">
@@ -553,9 +553,8 @@
                             </span>
                         </button>
                     </a>
-                    <p>یکی از کانکشن‌ها را به دلخواه انتخاب کرده و دکمه روشن شدن را که در بالای صفحه است، برگزینید تا نرم افزار فعال شود. در سمت چپ کانفیگی که انتخاب شده یک نقطه زرد نمایش داده می‌شود.</p>
-                    <img src="https://i.ibb.co/NdwqBqRm/Screenshot-2025-04-04-at-16-37-16.png">
-                    <p>بعد از فعال شدن این دکمه به رنگ سبز درمی‌آید.</p>
+                    <p>یکی از کانکشن‌ها را به دلخواه انتخاب کرده و روی گزینه tap to connect کلیک کنید تا سبز شود..</p>
+                    <img src="https://i.ibb.co/Q7PgG1Hj/Screenshot-2025-05-21-at-23-17-34.png">
                     <p>در صورت وجود هر گونه مشکل به پشتیبانی پیام دهید.</p>
                 </div>
             </div>
@@ -565,7 +564,7 @@
                 document.addEventListener('DOMContentLoaded', function() {
                     const currentUrl = window.location.href;
                     const streisandLink = document.getElementById('streisand-import-link');
-                    streisandLink.href = `streisand://import/${currentUrl}`;
+                    streisandLink.href = `v2box://install-sub?url=${currentUrl}&name=Sub`;
                 });
             </script>
             
@@ -625,7 +624,7 @@
                     // Streisand link for iOS
                     const streisandLink = document.getElementById('streisand-import-link');
                     if (streisandLink) {
-                        streisandLink.href = `streisand://import/${currentUrl}`;
+                        streisandLink.href = `v2box://install-sub?url=${currentUrl}&name=Sub`;
                     }
                     
                     // V2rayNG link for Android
@@ -683,7 +682,7 @@
                     // Streisand link for iOS
                     const streisandLink = document.getElementById('streisand-import-link');
                     if (streisandLink) {
-                        streisandLink.href = `streisand://import/${currentUrl}`;
+                        streisandLink.href = `v2box://install-sub?url=${currentUrl}&name=Sub`;
                     }
                     
                     // V2rayNG link for Android
