@@ -496,16 +496,14 @@
                     </div>
                 </div>
                 
+                {% if user.data_limit %}
                 <div class="usage-item" style="flex: 1; padding: 0 10px; border-left: 1px solid rgba(255, 255, 255, 0.1); border-right: 1px solid rgba(255, 255, 255, 0.1);">
                     <div class="usage-label" style="color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">حجم باقی مانده</div>
                     <div class="usage-value" style="font-weight: bold; color: #6ab7ff;" dir="ltr">
-                        {% if not user.data_limit %}
-                            نامحدود
-                        {% else %}
-                            {{ ((user.data_limit - user.used_traffic) / 1073741824)|round(1) }} GB
-                        {% endif %}
+                        {{ ((user.data_limit - user.used_traffic) / 1073741824)|round(1) }} GB
                     </div>
                 </div>
+                {% endif %}
                 
                 <div class="usage-item" style="flex: 1; padding: 0 10px;">
                     <div class="usage-label" dir="ltr" style="color: rgba(255, 255, 255, 0.7); margin-bottom: 5px;">مدت زمان باقی‌مانده</div>
@@ -522,7 +520,7 @@
 
         <!-- Connection Instructions -->
         <div class="accordion">
-            <h2 class="accordion-title">آموزش اتصال سریع</h2>
+            <h2 class="accordion-title">روی سیستم‌عامل خود کلیک کنید</h2>
             
             <!-- iOS -->
             <div class="accordion-item-ios">
@@ -533,8 +531,8 @@
                     </span>
                 </button>
                 <div class="accordion-content">
-                    <p>ابتدا برنامه V2box را با کلیک بر روی دکمه زیر از اپ‌استور دانلود نمایید.</p>
-                    <a href="https://apps.apple.com/us/app/v2box-v2ray-client/id6446814690"><button class="pushable">
+                    <p>ابتدا برنامه Streisand را با کلیک بر روی دکمه زیر از اپ‌استور دانلود نمایید.</p>
+                    <a href="https://apps.apple.com/us/app/streisand/id6450534064"><button class="pushable">
                         <span class="shadow"></span>
                         <span class="edge"></span>
                         <span class="front">
@@ -553,8 +551,9 @@
                             </span>
                         </button>
                     </a>
-                    <p>یکی از کانکشن‌ها را به دلخواه انتخاب کرده و روی گزینه tap to connect کلیک کنید تا سبز شود..</p>
-                    <img src="https://i.ibb.co/Q7PgG1Hj/Screenshot-2025-05-21-at-23-17-34.png">
+                    <p>یکی از کانکشن‌ها را به دلخواه انتخاب کرده و دکمه روشن شدن را که در بالای صفحه است، برگزینید تا نرم افزار فعال شود. در سمت چپ کانفیگی که انتخاب شده یک نقطه زرد نمایش داده می‌شود.</p>
+                    <img src="https://i.ibb.co/NdwqBqRm/Screenshot-2025-04-04-at-16-37-16.png">
+                    <p>بعد از فعال شدن این دکمه به رنگ سبز درمی‌آید.</p>
                     <p>در صورت وجود هر گونه مشکل به پشتیبانی پیام دهید.</p>
                 </div>
             </div>
@@ -564,7 +563,7 @@
                 document.addEventListener('DOMContentLoaded', function() {
                     const currentUrl = window.location.href;
                     const streisandLink = document.getElementById('streisand-import-link');
-                    streisandLink.href = `v2box://install-sub?url=${currentUrl}&name=Sub`;
+                    streisandLink.href = `streisand://import/${currentUrl}`;
                 });
             </script>
             
